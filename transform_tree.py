@@ -95,21 +95,21 @@ def transform_file(file, source_dir, rel_dest_dir, dest_root):
         return
 
     make_dirs(dest_dir)
+    do_transform(source_path, dest_path)
 
+def do_transform(source, dest):
     if args.link:
-        transform_function = os.link
+        func = os.link
     elif args.symbolic_link:
-        transform_function = os.symlink
+        func = os.symlink
     else:
-        transform_function = shutil.copy
+        func = shutil.copy
 
-    do_transform(transform_function, source_path, dest_path)
-
-def do_transform(function, source_path, dest_path):
     if args.interactive:
         pass #TODO
+
     if not args.dry_run:
-        function(source_path, dest_path)
+        func(source, dest)
 
 def make_dirs(path):
     if os.path.isdir(path):
