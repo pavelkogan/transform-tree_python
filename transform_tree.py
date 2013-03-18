@@ -104,6 +104,8 @@ def do_transform(source, dest):
     elif args.symbolic_link:
         func = os.symlink
         string = "'%s' -> '%s'" % (source, dest)
+        if not os.path.isabs(source):
+            source = os.path.relpath(source, os.path.dirname(dest))
     else:
         func = shutil.copy
         string = "'%s' >=> '%s'" % (source, dest)
