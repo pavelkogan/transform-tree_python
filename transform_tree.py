@@ -127,16 +127,18 @@ def is_subdir(dir, root):
     logging.debug('check %s inside %s', dir, root)
     return root == os.path.commonprefix([dir, root])
 
+def log_level():
+    if args.quiet:
+        return logging.ERROR
+    elif args.verbose == 1:
+        return logging.INFO
+    elif args.verbose >= 2:
+        return logging.DEBUG
+    else:
+        return logging.WARNING
+
 if __name__ == '__main__':
     args = parser.parse_args()
-    if args.quiet:
-        log_level = logging.ERROR
-    elif args.verbose == 1:
-        log_level = logging.INFO
-    elif args.verbose >= 2:
-        log_level = logging.DEBUG
-    else:
-        log_level = logging.WARNING
-    logging.basicConfig(level=log.level)
+    logging.basicConfig(level=log_level())
     RENAMED = make_renamer()
     sys.exit(main())
