@@ -100,14 +100,19 @@ def transform_file(file, source_dir, rel_dest_dir, dest_root):
 def do_transform(source, dest):
     if args.link:
         func = os.link
+        string = "'%s' => '%s'" % (source, dest)
     elif args.symbolic_link:
         func = os.symlink
+        string = "'%s' -> '%s'" % (source, dest)
     else:
         func = shutil.copy
+        string = "'%s' >=> '%s'" % (source, dest)
 
     if args.interactive:
         pass #TODO
 
+    if args.verbose >= 1 and not args.quiet:
+        print string
     if not args.dry_run:
         func(source, dest)
 
