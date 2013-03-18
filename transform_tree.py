@@ -22,6 +22,7 @@ parser.add_argument('-f', '--force', action='store_true')
 parser.add_argument('-i', '--interactive', action='store_true')
 parser.add_argument('-q', '--quiet', action='store_true')
 parser.add_argument('-v', '--verbose', action='count')
+parser.add_argument('-n', '--dry-run', action='store_true')
 parser.add_argument('-c', '--convert', metavar='CONVERTER')
 parser.add_argument('-r', '--rename', metavar='RENAMER')
 rename_group = parser.add_mutually_exclusive_group()
@@ -107,7 +108,8 @@ def transform_file(file, source_dir, rel_dest_dir, dest_root):
 def do_transform(function, source_path, dest_path):
     if args.interactive:
         pass #TODO
-    function(source_path, dest_path)
+    if not args.dry_run:
+        function(source_path, dest_path)
 
 def make_dirs(path):
     if os.path.isdir(path):
@@ -116,7 +118,8 @@ def make_dirs(path):
         logging.error('%s exists and is not a directory', path)
     else:
         logging.debug("%s dir doesn't exist, creating", path)
-        os.makedirs(path)
+        if not args.dry_run:
+            os.makedirs(path)
 
 def is_subdir(dir, root):
     root = os.path.join(os.path.normpath(root),'')
