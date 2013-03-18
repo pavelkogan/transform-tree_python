@@ -87,7 +87,7 @@ def walk_tree(source, dest):
 def transform_file(file, source_dir, rel_dest_dir, dest_root):
     source_path = os.path.join(source_dir, file)
     rel_dest_path = RENAMED(os.path.join(rel_dest_dir, file))
-    dest_path = os.path.join(dest_root, rel_dest_path)
+    dest_path = os.path.normpath(os.path.join(dest_root, rel_dest_path))
     dest_dir = os.path.dirname(dest_path)
 
     if not is_subdir(rel_dest_dir, dest_root):
@@ -122,9 +122,10 @@ def make_dirs(path):
             os.makedirs(path)
 
 def is_subdir(dir, root):
-    root = os.path.join(os.path.normpath(root),'')
-    dir = os.path.normpath(dir)
-    return root == os.path.commonprefix(dir, root)
+    root = os.path.join(os.path.realpath(root),'')
+    dir = os.path.join(os.path.realpath(dir),'')
+    logging.debug('check %s inside %s', dir, root)
+    return root == os.path.commonprefix([dir, root])
 
 if __name__ == '__main__':
     args = parser.parse_args()
